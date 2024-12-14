@@ -1,7 +1,6 @@
-// App.jsx
 import React, { useState } from "react";
 
-const App = () => {
+function App() {
   const [customers, setCustomers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,22 +12,25 @@ const App = () => {
     status: "",
   });
 
-  const handleInputChange = (e) => {
+  function handleInputChange(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
+  }
 
-  const handleAddCustomer = () => {
-    if (!formData.name || !formData.description || !formData.rate || !formData.balance || !formData.deposit || !formData.status) return;
+  function handleAddCustomer() {
+    if (!formData.name || !formData.description || !formData.rate || !formData.balance || !formData.deposit || !formData.status) {
+      alert("Barcha maydonlar to'ldirilishi shart!");
+      return;
+    }
     setCustomers([...customers, formData]);
     setFormData({ name: "", description: "", rate: "", balance: "", deposit: "", status: "" });
     setIsModalOpen(false);
-  };
+  }
 
-  const handleDeleteCustomer = (index) => {
+  function handleDeleteCustomer(index) {
     const updatedCustomers = customers.filter((_, i) => i !== index);
     setCustomers(updatedCustomers);
-  };
+  }
 
   return (
     <div className="container mx-auto min-h-screen bg-gray-100 p-6">
@@ -42,39 +44,24 @@ const App = () => {
         </button>
       </div>
 
-      <table className="w-full bg-white shadow rounded-lg">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="p-2 text-left">Name</th>
-            <th className="p-2 text-left">Description</th>
-            <th className="p-2 text-left">Rate</th>
-            <th className="p-2 text-left">Balance</th>
-            <th className="p-2 text-left">Deposit</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer, index) => (
-            <tr key={index} className="border-t hover:bg-gray-50">
-              <td className="p-2">{customer.name}</td>
-              <td className="p-2">{customer.description}</td>
-              <td className="p-2">{customer.rate}</td>
-              <td className={`p-2 ${customer.balance < 0 ? 'text-red-500' : 'text-green-500'}`}>{customer.balance}</td>
-              <td className="p-2">{customer.deposit}</td>
-              <td className="p-2">{customer.status}</td>
-              <td className="p-2">
-                <button
-                  onClick={() => handleDeleteCustomer(index)}
-                  className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ul className="bg-white shadow rounded-lg divide-y">
+        {customers.map((customer, index) => (
+          <li key={index} className="p-4 flex justify-between items-center hover:bg-gray-50">
+            <div>
+              <p className="font-semibold">{customer.name}</p>
+              <p className="text-sm text-gray-600">{customer.description}</p>
+              <p className={`text-sm ${customer.balance < 0 ? 'text-red-500' : 'text-green-500'}`}>Balance: {customer.balance}</p>
+              <p className="text-sm">Rate: {customer.rate}, Deposit: {customer.deposit}, Status: {customer.status}</p>
+            </div>
+            <button
+              onClick={() => handleDeleteCustomer(index)}
+              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -87,7 +74,7 @@ const App = () => {
                   name={field}
                   value={formData[field]}
                   onChange={handleInputChange}
-                  placeholder={field}
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
                   className="w-full p-2 border rounded"
                 />
               </div>
@@ -111,6 +98,6 @@ const App = () => {
       )}
     </div>
   );
-};
+}
 
-export default App;
+export default App
